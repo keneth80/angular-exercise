@@ -31,7 +31,7 @@ export class DialogContainerComponent implements OnInit {
         });
     }
 
-    async loadFeedDetail(feed: FeedModel) {
+    loadFeedDetail(feed: FeedModel) {
         const viewContainerRef = this.adHost.viewContainerRef;
         viewContainerRef.clear();
 
