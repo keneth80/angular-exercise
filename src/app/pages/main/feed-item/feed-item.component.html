@@ -18,7 +18,9 @@
             </ng-template>
         </div>
         <p class="feed-txt">
-            {{feed?.content}}
+            {{feedContent}}
+            &nbsp;
+            <button (click)="onMoreContent($event)">+더보기</button>
             &nbsp;
             <a class="tag" *ngFor="let tag of tags" (click)="onGoSearchPage(tag)">{{tag}}</a>
         </p>

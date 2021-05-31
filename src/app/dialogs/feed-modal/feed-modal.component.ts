@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../common/services/authentication/auth
 import { BaseComponent } from '../../common/components/base.component';
 import { ReplyModel } from '../../common/models/reply.model';
 import { FeedModalService } from './feed-modal.service';
+import { LESS_TEXT, MORE_TEXT } from '../../common/const';
 
 @Component({
     selector: 'app-feed-modal',
@@ -30,6 +31,12 @@ export class FeedModalComponent extends BaseComponent implements OnInit {
     // tag list
     tags: string[] = [];
 
+    // feed content 요약글
+    feedContent = '';
+
+    // feed content에서 요약보기 더보기 flag
+    isMoreContent = true;
+
     constructor(
         private dialogService: DialogService,
         private router: Router,
@@ -44,6 +51,9 @@ export class FeedModalComponent extends BaseComponent implements OnInit {
 
         // parse 하여 템플릿에 바인딩.
         this.tags = this.feed.tags ? this.feed.tags.split(',') : [];
+
+        // 더보기 기능을 위해 임시로 텍스트를 자름.
+        this.feedContent = this.feed.content.substring(0, 15);
 
         this.subscription = this.feedModalService.replyList$.subscribe((replys: ReplyModel[]) => {
             this.replyContent = '';
@@ -91,6 +101,17 @@ export class FeedModalComponent extends BaseComponent implements OnInit {
     onGoSearchPage(tag: string) {
         this.dialogService.close();
         this.router.navigate(['/feed-search/' + tag.substring(1, tag.length)]);
+    }
+
+    onMoreContent(event: any) {
+        this.isMoreContent = !this.isMoreContent;
+        if (!this.isMoreContent) {
+            event.target.innerText = LESS_TEXT;
+            this.feedContent = this.feed.content;
+        } else {
+            event.target.innerText = MORE_TEXT;
+            this.feedContent = this.feed.content.substring(0, 15) + '...';
+        }
     }
 
 }

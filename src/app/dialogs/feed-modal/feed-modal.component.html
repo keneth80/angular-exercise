@@ -23,7 +23,11 @@
                                 <span class="like-count">첫번째로 응원하기</span>
                         </ng-template>
                     </div>
-                    <p class="feed-txt">{{feed?.content}}&nbsp;
+                    <p class="feed-txt">
+                        {{feedContent}}
+                        &nbsp;
+                        <button (click)="onMoreContent($event)">+더보기</button>
+                        &nbsp;
                         <a class="tag" *ngFor="let tag of tags" (click)="onGoSearchPage(tag)">{{tag}}</a>
                     </p>
                     <p class="feed-date">{{feed?.createdAtShort}}</p>

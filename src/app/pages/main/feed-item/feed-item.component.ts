@@ -6,7 +6,7 @@ import { UserProfileModel } from '../../../common/models/user-profile.model';
 import { Router } from '@angular/router';
 import { ReplyModel } from '../../../common/models/reply.model';
 import { Subscription } from 'rxjs';
-import { GO_LOGIN_MESSAGE } from '../../../common/const';
+import { GO_LOGIN_MESSAGE, LESS_TEXT, MORE_TEXT } from '../../../common/const';
 import { BaseComponent } from '../../../common/components/base.component';
 
 @Component({
@@ -31,6 +31,12 @@ export class FeedItemComponent extends BaseComponent implements OnInit, OnDestro
     // tag list
     tags: string[] = [];
 
+    // feed content 요약글
+    feedContent = '';
+
+    // feed content에서 요약보기 더보기 flag
+    isMoreContent = true;
+
     private userProfile: UserProfileModel;
 
     constructor(
@@ -46,6 +52,9 @@ export class FeedItemComponent extends BaseComponent implements OnInit, OnDestro
 
         // parse 하여 템플릿에 바인딩
         this.tags = this.feed.tags ? this.feed.tags.split(',') : [];
+
+        // 더보기 기능을 위해 임시로 텍스트를 자름.
+        this.feedContent = this.feed.content.substring(0, 15) + '...';
 
         this.subscription = this.feedItemService.replyList$.subscribe((replys: ReplyModel[]) => {
             this.replyContent = '';
@@ -103,6 +112,17 @@ export class FeedItemComponent extends BaseComponent implements OnInit, OnDestro
 
     onGoSearchPage(tag: string) {
         this.router.navigate(['/feed-search/' + tag.substring(1, tag.length)]);
+    }
+
+    onMoreContent(event: any) {
+        this.isMoreContent = !this.isMoreContent;
+        if (!this.isMoreContent) {
+            event.target.innerText = LESS_TEXT;
+            this.feedContent = this.feed.content;
+        } else {
+            event.target.innerText = MORE_TEXT;
+            this.feedContent = this.feed.content.substring(0, 15) + '...';
+        }
     }
 
     private loginCheck(): boolean {
