@@ -28,6 +28,9 @@ export class FeedItemComponent extends BaseComponent implements OnInit, OnDestro
     // 객체의 특정 값의 변경에 따라 템플릿을 적용해야할 경우에는 따로 변수를 선언하는게 낫다.
     feedLike = 0;
 
+    // tag list
+    tags: string[] = [];
+
     private userProfile: UserProfileModel;
 
     constructor(
@@ -40,6 +43,10 @@ export class FeedItemComponent extends BaseComponent implements OnInit, OnDestro
 
     ngOnInit(): void {
         this.feedLike = this.feed.like || 0;
+
+        // parse 하여 템플릿에 바인딩
+        this.tags = this.feed.tags ? this.feed.tags.split(',') : [];
+
         this.subscription = this.feedItemService.replyList$.subscribe((replys: ReplyModel[]) => {
             this.replyContent = '';
             this.feed.reply = replys;
@@ -88,6 +95,14 @@ export class FeedItemComponent extends BaseComponent implements OnInit, OnDestro
                 }
             });
         }
+    }
+
+    onGoUserPage(userNickName: string) {
+        this.router.navigate(['/home/' + userNickName]);
+    }
+
+    onGoSearchPage(tag: string) {
+        this.router.navigate(['/feed-search/' + tag.substring(1, tag.length)]);
     }
 
     private loginCheck(): boolean {

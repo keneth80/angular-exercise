@@ -27,6 +27,9 @@ export class FeedModalComponent extends BaseComponent implements OnInit {
     // 객체의 특정 값의 변경에 따라 템플릿을 적용해야할 경우에는 따로 변수를 선언하는게 낫다.
     feedLike = 0;
 
+    // tag list
+    tags: string[] = [];
+
     constructor(
         private dialogService: DialogService,
         private router: Router,
@@ -38,6 +41,9 @@ export class FeedModalComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.feedLike = this.feed.like || 0;
+
+        // parse 하여 템플릿에 바인딩.
+        this.tags = this.feed.tags ? this.feed.tags.split(',') : [];
 
         this.subscription = this.feedModalService.replyList$.subscribe((replys: ReplyModel[]) => {
             this.replyContent = '';
@@ -75,6 +81,16 @@ export class FeedModalComponent extends BaseComponent implements OnInit {
                 this.feedLike--;
             }
         }
+    }
+
+    onGoUserPage(userNickName: string) {
+        this.dialogService.close();
+        this.router.navigate(['/home/' + userNickName]);
+    }
+
+    onGoSearchPage(tag: string) {
+        this.dialogService.close();
+        this.router.navigate(['/feed-search/' + tag.substring(1, tag.length)]);
     }
 
 }
